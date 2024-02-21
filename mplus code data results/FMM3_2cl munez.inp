@@ -1,0 +1,28 @@
+
+TITLE: FMM3_2cls;
+DATA:  file is data_gauss_10.csv;
+VARIABLE: 
+names are W1MFT W1MPS W1NO;
+usevariables are w1mft w1mps w1no;
+missing = *;
+classes = c(2);
+ANALYSIS:
+estimator= mlr;
+type= mixture;
+starts = 400 80;
+processors = 4(STARTS);
+MODEL:
+%overall%
+f1 by w1mft-w1no; 
+f1;
+[f1@0]; ! Fixing mean of factors at 0 for identification purposes
+[w1mft-w1no] ; !intercepts
+%c#1% 
+f1 by w1mps-w1no; !this is to estimate different factor loadings across latent classes
+f1;
+[w1mft-w1no] ; !this is to estimate different intercepts across latent classes
+%c#2% 
+f1 by w1mps-w1no; 
+f1;
+[w1mft-w1no] ;
+OUTPUT: tech11;
