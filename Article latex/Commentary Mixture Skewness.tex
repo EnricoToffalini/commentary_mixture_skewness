@@ -5,9 +5,21 @@
 \usepackage{hyperref}
 \usepackage{apacite}
 \usepackage{authblk}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{caption}
 \usepackage[a4paper, total={6.5in,9in}]{geometry}
+
+\captionsetup[table]{labelfont=bf}
+\captionsetup[table]{labelsep=period}
+
+\usepackage{titlesec}
+\titleformat{\section}{\centering\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\centering\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\centering\bfseries}{\thesubsubsection}{1em}{}
+
 \title{% 
-  \LARGE Psychometrically skewed distributions lead to finding pseudoclusters when using mixture models: \\ 
+  \LARGE Psychometrically skewed distributions may lead to pseudoclustering when using mixture models: \\ 
    \Large Commentary on “Heterogeneity in children \\ at risk of math learning difficulties” \large (Munez et al., 2023) 
   \ \\
   \ \\
@@ -15,9 +27,14 @@
 \author{Enrico Toffalini}
 \affil{Department of General Psychology, University of Padova, Italy}
 \renewcommand{\baselinestretch}{1.5} 
+
 \begin{document}
 \maketitle
 \newpage
+
+\begin{center} 
+\textbf{Psychometrically skewed distributions may lead to pseudoclustering when using mixture models: Commentary on “Heterogeneity in children at risk of math learning difficulties” (Munez et al., 2023)}
+\end{center}
 
 In a recent study, \citeA{munez2023heterogeneity} challenge the dimensional framework on learning difficulties suggesting that children with math learning difficulties (MLD) might cluster into two (or even three) qualitatively different types, rather than representing cases of a single homogeneous population. They fit a series of confirmatory factor analysis (CFA), latent profile analysis (LPA) and factor mixture models. We praise the authors for identifying mixture models as an ideal method for investigating the existence of subpopulations within a larger set of cases, thus unveiling hidden heterogeneity in what is otherwise traditionally considered as an undifferentiated condition. In a similar fashion, in their recent comprehensive review on the “transdiagnostic revolution”, \citeA{astle2022annual} suggested using clustering methods as a main way for discovering true underlying neurocognitive types beneath the surface of traditional diagnostic categories in neurodevelopmental disorders. While such a data-driven approach should not be used in isolation, \citeA{astle2022annual} present it as a major complement to the toolbox of the researcher who investigates neurodiversity, alongside dimensional methods.
 
@@ -25,11 +42,39 @@ Clustering techniques, including those based on mixture models, imply some assum
 
 To clarify the above, \citeA{toffalini2022entia} showed that Gaussian mixture models, under different sets of specific conditions, tend to incorrectly detect multiple clusters despite data being drawn from a single population. Surprisingly, this happened even when the distributional assumption was met (i.e., data were generated from perfectly Gaussian multivariate distributions). Such an inflation of detected clusters occurred when the sample size was insufficient for modeling the existing covariance across indicators within the detected clusters (e.g., the sample size was medium or even large, but the correlations across multiple indicators were weak). Strikingly, under specific combinations of sample size, correlation coefficients, and number of indicators, it was virtually guaranteed that Gaussian mixture models would detect multiple latent classes/clusters where none existed. Another problem is that for true clusters to be correctly detected, their separation across clustering indicators must be so large (i.e., at least Cohen’s \textit{d} = 0.8 on several independent dimensions; see \citeNP{tein2013statistical}) that it is unlikely that they could have gone undetected until data-driven analysis was conducted. Such large effect sizes on many orthogonal variables may even appear implausible in psychological research per se \cite{toffalini2022entia}. In \citeA{munez2023heterogeneity}, the separations between the two detected clusters are rather large, with the intercepts differing by more than 1.0 \textit{SD} in all three indicators of math ability, and mean differences close to 1.0 \textit{SD} also in several other domain-general and domain-specific cognitive variables. That one cluster outperforms the other(s) in all variables simultaneously might also indicate that the number of detected latent classes is inflated due to correlations \cite{toffalini2022entia}. 
 
+\section*{Data Simulation}
+
 As a retrospective evaluation of the inferential risks in the research scenario presented by \citeA{munez2023heterogeneity}, we run a series of Monte Carlo simulations. Data simulation was based on the coefficients that the authors report in their descriptive statistics table and was conducted with the “semTools” package of R, which allows to simulate multivariate (non-)normal distributions. We took sample size (\textit{N} = 428), correlations, skewness, and kurtosis coefficients for the three measures of math ability used for clustering (i.e., math fluency, math problem solving, and numerical operations). All correlations are quite strong (\textit{r} in [0.52, 0.70]). One skewness coefficient is large (0.98 in math fluency), and another is moderately large (-0.68 in numerical operations). All kurtosis coefficients are moderately large (absolute values $\geq$ 0.50). Crucially, large skewness here is likely to reflect the task characteristics, rather than the existence of clusters. Math fluency has a mean value (14.19) that is much closer to the lower (0) than to the upper (48) bound, and the mean is only 1.37 \textit{SD}s away from the lower bound. Also, the data-generating process is a binomial one (i.e., sum of dichotomous [correct/incorrect] responses to items), which does not lead to normal distributions. Commendably, the authors provided the Mplus script that they used for fitting models, so we could reuse the exact same code in the first set of analyses. As Mplus is a licensed, non-open-source software, which makes it difficult for others to freely replicate the results, however, we subsequently offer other simplified examples entirely run with the R free software \cite{team2010r} to further clarify our points, and we provide the code. 
+
+\section*{Results}
 
 We simulated 10 datasets and fitted factor mixture models using the Mplus code provided by \citeA{munez2023heterogeneity}. Models featuring 1, 2, and 3 latent classes were fitted. Non-invariant model alternatives were preferred to ensure maximum flexibility, and because these were the models chosen by the authors in their final selected solution. In all 10 iterations, BIC consistently favored a three-class solution. The two-class model always outperformed the one-class model (median $\Delta$BIC = -134.7), and the three-class model always outperformed the two-class model (median $\Delta$BIC = -28.26). In all but one case, likelihood ratio test also suggested that one-class hypothesis (H$_{0}$) should be rejected in favor of a two-class solution (\textit{p}s $<$ 0.001), while in five of these cases the two-class hypothesis (as H$_{0}$) was rejected in favor of the three-class solution (\textit{p}s $<$ 0.05). As a further sanity check, all 10 datasets were re-simulated with perfectly normal distributions (i.e., with all skewness and kurtosis coefficients set to zero in the data-generating process). In this second case, the BIC consistently (and correctly) favored the one-class solution (median $\Delta$BIC = +17.94 in favor of the one-class over the two-class solution, and median $\Delta$BIC = +19.50 in favor of the two-class over the three-class solution). This double check confirmed that the inflation of the number of detected clusters was due to non-normality. Caution should be used, however, as several warnings emerged that the latent variable covariance matrix was not positive definite in one or more classes, especially with the three-class solutions.
 
 Further Monte Carlo simulations of Gaussian mixture models were run in R. The code is provided on GitHub at \url{https://github.com/EnricoToffalini/commentary_mixture_skewness}. The famous “mclust” package \cite{scrucca2016mclust} was used. Tested solutions featured 1 to 3 components (latent classes/clusters). BIC was used as the criterion for determining the optimal solution. First, we run 1,000 iterations simulating datasets (each with \textit{N} = 428) featuring skewness and kurtosis as reported above. Note that, in all cases, we drew data from one single population (with no clusters in it). The one-class solution was never selected, despite being the correct one. In 41.4\% of iterations the two-class solution was favored, and in the remaining 58.6\% of iterations the three-class solution was favored. Then, we run another 1,000 iterations with the same N and correlations across variables, but with all skewness and kurtosis coefficients set to zero. In this case, the one-class solution was (correctly) selected as optimal in 100\% of iterations.
+
+\begin{table}[htbp]
+    \centering
+    \label{tab:iterationResults}
+    \caption{\newline \textit{Results from 10 iterations of running factor mixture model, 1-3 classes, on simulated data with 3 indicators and parameters taken from Munez et al. (2023). Data present significant skewness and kurtosis (see text), but no true latent classes. N = 428}}
+    \begin{tabularx}{\textwidth}{XXXXXX}
+       \toprule
+        \textbf{Iteration} & \textbf{BIC \newline(1 class)} & \textbf{BIC \newline(2 classes)} & \textbf{BIC \newline(3 classes)} & \textbf{LRT p-val \newline(2 vs 1 cl.)} & \textbf{LRT p-val \newline(3 vs 2 cl.)}  \\
+        \midrule
+        1 & 3260.71 & 3117.46 & 3058.55 & \textless 0.001 & \textless 0.001 \\
+        2 & 3231.70 & 3120.85 & 3102.48 & \textless 0.001 & 0.002 \\
+        3 & 3244.15 & 3101.92 & 3062.66 & \textless 0.001 & \textless 0.001 \\
+        4 & 3123.03 & 2999.45 & 2979.78 & \textless 0.001 & 0.005 \\
+        5 & 3189.74 & 3050.75 & 3022.55 & \textless 0.001 & 0.275 \\
+        6 & 3164.93 & 3035.99 & 3011.98 & \textless 0.001 & 0.052 \\
+        7 & 3228.02 & 3051.49 & 3048.14 & \textless 0.001 & 0.076 \\
+        8 & 3131.17 & 2978.36 & 2931.72 & \textless 0.001 & \textless 0.001 \\
+        9 & 3140.58 & 3024.68 & 2996.36 & 0.113 & 0.010 \\
+       10 & 3199.68 & 3069.27 & 3016.92 & \textless 0.001 & 0.055 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section*{Conclusions}
 
 To summarize, we showed that there is likely no evidence of hidden heterogeneity in children with MLD. While doing so, we took the chance to point to a larger problem concerning clustering individuals on psychological data. The ground truth of the data-generating process is (always) unknown with respect to the real data, yet we demonstrated that \citeA{munez2023heterogeneity} had a high chance of detecting multiple clusters in their data even if no true latent classes existed within MLD. The main issue, in the present case, lies in data not meeting the normality assumption. As explained above, non-normality probably reflects the characteristics of the tasks used, and it is a widespread problem in psychometrics (e.g., \citeNP{micceri1989unicorn}). When assessing achievement or cognitive abilities in developmental samples, sum scores are often computed. Sums of dichotomous (correct/incorrect) responses, unfortunately, feature skewness (unless averaging at exactly 50\%) and are certainly non-normally distributed, due to mean and \textit{SD} being non-independent in binomial processes. Preliminary computation of individual ability parameters with Item Response Theory (IRT) models, or even via predicted scores with Confirmatory Factor Analysis (CFA) with ordinal items, might be a preferred solution here to normalize scores.
 
@@ -38,6 +83,7 @@ Moving forward, we suggest that clustering techniques should always be handled w
 \\
 \subsection*{Code and data availability }
 Code and data used in this article are fully available on GitHub at: \url{https://github.com/EnricoToffalini/commentary_mixture_skewness}
+\newpage
 \bibliographystyle{apacite}
 \bibliography{references.tex}
 \end{document}
