@@ -1,7 +1,7 @@
 
 ##############################
 
-rm(list=ls())
+rm(list=ls()) 
 library(lavaan)
 library(MASS)
 library(semTools)
